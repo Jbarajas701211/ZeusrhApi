@@ -10,6 +10,7 @@ namespace Interfaces.IRepository
     public interface IUsuarioRepository
     {
         Task<Usuario?> ObtenerUsuarioPorCorreoAsync(string correo);
+        Task<bool> ActualizarUsuarioBloquearAsync(Usuario usuario);
         Task<bool> ActualizarIntentosAsync(UsuarioIntento usuarioIntento);
         Task<bool> CrearIntentosAsync(UsuarioIntento usuarioIntento);
         Task<bool> CrearUsuarioAsync(Usuario usuario);

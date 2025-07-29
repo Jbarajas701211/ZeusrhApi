@@ -41,6 +41,23 @@ namespace Implementation.Repositorys
             return null;
         }
 
+        public async Task<bool> ActualizarUsuarioBloquearAsync(Usuario usuario)
+        {
+            using (var conn = _context.CreateConnection())
+            {
+                string query = @"UPDATE Usuario SET
+                                EsBloqueado = @EsBloqueado
+                                WHERE IdUsuario = @IdUsuario";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@EsBloqueado", usuario.EsBloqueado);
+                cmd.Parameters.AddWithValue("@IdUsuario", usuario.IdUsuario);
+                await conn.OpenAsync();
+                var actualizado = await cmd.ExecuteNonQueryAsync();
+                return actualizado > 0;
+            }
+        }
+
         public async Task<bool> ActualizarIntentosAsync(UsuarioIntento usuarioIntento)
         {
             using (var conn = _context.CreateConnection()) 
@@ -49,12 +66,13 @@ namespace Implementation.Repositorys
                                 Intentos = @Intentos,
                                 Bloqueado = @Bloqueado,
                                 FechaBloqueo = @FechaBloqueo
-                                WHERE IdUsuario = @IdUsuario";
+                                WHERE UsuarioId = @UsuarioId";
 
                 SqlCommand cmd = new SqlCommand(query,conn);
                 cmd.Parameters.AddWithValue("@Intentos", usuarioIntento.Intentos);
                 cmd.Parameters.AddWithValue("@Bloqueado", usuarioIntento.Bloqueado);
-                cmd.Parameters.AddWithValue("@IdUsuario", usuarioIntento.UsuarioId);
+                cmd.Parameters.AddWithValue("@FechaBloqueo", usuarioIntento.FechaBloqueo);
+                cmd.Parameters.AddWithValue("@UsuarioId", usuarioIntento.UsuarioId);
                 await conn.OpenAsync();
                 var actualizado = await cmd.ExecuteNonQueryAsync();
                 return actualizado > 0;
@@ -65,7 +83,7 @@ namespace Implementation.Repositorys
         {
             using (var conn = _context.CreateConnection())
             {
-                string query = @"INSERT INTO UsuariosIntentos 
+                string query = @"INSERT INTO UsuarioIntento 
                                 (UsuarioId, Intentos, Bloqueado, FechaBloqueo)
                                 Values(
                                 @UsuarioId, 
@@ -77,8 +95,7 @@ namespace Implementation.Repositorys
                 cmd.Parameters.AddWithValue("@UsuarioId", usuarioIntento.UsuarioId);
                 cmd.Parameters.AddWithValue("@Intentos", usuarioIntento.Intentos);
                 cmd.Parameters.AddWithValue("@Bloqueado", usuarioIntento.Bloqueado);
-                cmd.Parameters.AddWithValue("@IdUsuario", usuarioIntento.UsuarioId);
-                cmd.Parameters.AddWithValue("@FechaBloqueo", usuarioIntento.FechaBloqueo);
+                cmd.Parameters.AddWithValue("@FechaBloqueo", usuarioIntento.FechaBloqueo ?? DateTime.Now);
                 await conn.OpenAsync();
                 var actualizado = await cmd.ExecuteNonQueryAsync();
                 return actualizado > 0;
@@ -121,7 +138,7 @@ namespace Implementation.Repositorys
         {
             using (var conn = _context.CreateConnection())
             {
-                string query = "SELECT * FROM UsuarioIntento WHERE Correo = @Correo";
+                string query = "SELECT * FROM UsuarioIntento WHERE UsuarioId = @UsuarioId";
                 SqlCommand cmd = new SqlCommand(query, conn);
 
                 cmd.Parameters.AddWithValue("@UsuarioId", usuarioId);
@@ -135,7 +152,8 @@ namespace Implementation.Repositorys
                         {
                             Intentos = reader.GetInt32(reader.GetOrdinal("Intentos")),
                             Bloqueado = reader.GetBoolean(reader.GetOrdinal("Bloqueado")),
-                            FechaBloqueo = reader.GetDateTime(reader.GetOrdinal("FechaBloqueo"))
+                            FechaBloqueo = reader.GetDateTime(reader.GetOrdinal("FechaBloqueo")),
+                            UsuarioId = reader.GetInt32(reader.GetOrdinal("UsuarioId"))
                         };
                     }
                 }

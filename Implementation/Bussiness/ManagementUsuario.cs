@@ -73,8 +73,31 @@ namespace Implementation.Bussiness
                     var intentosUsuario = await _usuarioRepository.ObtenerIntentosUsuarioAsync(existeUsuario.IdUsuario);
                     if (intentosUsuario is null)
                     {
-
+                        await _usuarioRepository.CrearIntentosAsync(new UsuarioIntento { Intentos = 1, UsuarioId = existeUsuario.IdUsuario, Bloqueado = false });
+                        return new ApiResponse<RespuestaAutenticacionDTO> { Errors = new List<string> { $"Solo tienes 2 intentos de 3 para ingresar el password correcto" } };
                     }
+
+                    intentosUsuario!.Intentos += 1;
+
+                    if (intentosUsuario.Intentos > 3)
+                    {
+                        intentosUsuario.Bloqueado = true;
+                        intentosUsuario.FechaBloqueo = DateTime.Now;
+
+                        var seBloqueo = await _usuarioRepository.ActualizarIntentosAsync(intentosUsuario);
+
+                        if (seBloqueo)
+                        {
+                            existeUsuario.EsBloqueado = true;
+                            seBloqueo = await _usuarioRepository.ActualizarUsuarioBloquearAsync(existeUsuario);
+                        }
+
+                        return new ApiResponse<RespuestaAutenticacionDTO> { Errors = new List<string>() { "Tu usuario fue bloqueado " } };
+                    }
+
+                    await _usuarioRepository.ActualizarIntentosAsync(intentosUsuario);
+
+                    return new ApiResponse<RespuestaAutenticacionDTO> { Errors = new List<string> { $"Solo tienes {3 - intentosUsuario.Intentos} intentos de 3 para ingresar el password correcto" } };
                 }
 
                 var token = _utility.GenerarJWT(existeUsuario);
