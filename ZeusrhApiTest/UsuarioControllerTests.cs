@@ -84,5 +84,51 @@ namespace ZeusrhApiTest
             Assert.Contains("Error al registrar", result.Errors);
         }
 
+        [Fact]
+        public async Task Login_ReturnsSuccessResponse_WhenLoginIsSuccessful()
+        {
+            // Arrange
+            var loginDTO = new LoginDTO { Clave = "password", Correo = "jbarajas70@msn.com" };
+            var claveEncriptada = "hashedPassword";
+            var respuestaAutenticacionDTO = new RespuestaAutenticacionDTO() { Expiracion = DateTime.Now, Token = "1234" };
+
+            // Configuramos el mock para encriptar la clave
+            _mockUtility.Setup(u => u.encriptarSHA256(It.IsAny<string>()))
+                        .Returns(claveEncriptada);
+
+            // Configuramos el mock para devolver una respuesta exitosa del login
+            var apiResponse = new ApiResponse<RespuestaAutenticacionDTO>
+            {
+                Success = true,
+                Data = respuestaAutenticacionDTO
+            };
+
+            _mockManagementUsuario.Setup(m => m.Login(It.Is<LoginDTO>(l => l.Clave == claveEncriptada)))
+                                  .ReturnsAsync(apiResponse);
+
+            // Act
+            var result = await _controller.Login(loginDTO);
+
+            // Assert
+            var okResult = Assert.IsType<ApiResponse<RespuestaAutenticacionDTO>>(result);
+            Assert.True(okResult.Success);
+            Assert.Equal(respuestaAutenticacionDTO, okResult.Data);
+        }
+
+        [Fact]
+        public async Task Login_ThrowsException_WhenManagementThrows()
+        {
+            // Arrange
+            var loginDTO = new LoginDTO { Clave = "password", Correo = "jbarajas70@msn.com" };
+
+            _mockUtility.Setup(u => u.encriptarSHA256(It.IsAny<string>()))
+                        .Returns("hashedPassword");
+
+            _mockManagementUsuario.Setup(m => m.Login(It.IsAny<LoginDTO>()))
+                                  .ThrowsAsync(new System.Exception("Error en login"));
+
+            // Act & Assert
+            await Assert.ThrowsAsync<System.Exception>(() => _controller.Login(loginDTO));
+        }
     }
 }
