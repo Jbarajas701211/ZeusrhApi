@@ -1,0 +1,17 @@
+a) Las deciciones técnicas tomadas
+	Decidí realizar la solución con el patron de Clean Architecture, para separar las capas que intervienen,
+	esto con la finalidad de que se pueda hacer escalable la aplicación, ya que de está forma se pueden incluir
+	nueva funcionalidad sin necesidad de modificar procesos en toda la solución. Solamente se tendría que modificar
+	donde se implementen las interfaces para modificar su funcionamiento o para ampliarlo
+
+	Se utilizó la inyección de dependencias para poder lograr la separación de las diferentes capas.
+
+	El JWT se implemento solo en el endpoint de Producto, primero se tuvo que dar de alta el servicio en el program.cs agregando
+	Authentication, en esta sección se especificó que se ocuparía del tipo JWTBearer, incluyendo una key para su validación.
+
+	Se crearon los siguientes endpoints:
+
+	  - POST api/Usuario/registro
+	  - POST api/Usuario/login
+	  - GET api/Producto
+	  - POST api/Producto
