@@ -23,7 +23,7 @@ namespace ZeusrhApi.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet(Name = "ObtenerProductos")]
+        [HttpGet(Name = "ObtenerProducto")]
         public async Task<ApiResponse<ProductoDTO>> Get(int idProducto)
         {
             return await managamentProducto.ObtenerProductoPorId(idProducto);
