@@ -13,6 +13,7 @@ Esta es una API desarrollada con ASP.NET Core para gestionar como prueba para au
 
 ### Para Usuario
 
+Para poder ejecutar el registro de un usuario requieres hacer la petición en el siguiente endpoint incluyendo el  json de entrada
 - GET /api/Usuario/registro
   El json de entrada es el siguiente: 
   {
@@ -21,7 +22,8 @@ Esta es una API desarrollada con ASP.NET Core para gestionar como prueba para au
   "clave": "string"
   }
 
-  La salida es la siguiente:
+  Lo que obtendrás como respuesta una vez creado el usuario es el siguiente json, 
+  donde se enviara el token para su uso en los endpoints donde sea requerido y el tiempo de expiración:
   {
   "success": true,
   "data": {
@@ -33,17 +35,18 @@ Esta es una API desarrollada con ASP.NET Core para gestionar como prueba para au
   ]
   }
 
-
+Para realizar el login deberas hacer la petición al siguiente endpoint
 - POST /api/Usuario/login
   
-  El json de entrada es el siguiente:
+  El json de entrada que deberás enviar en la petición es el siguiente:
 
   {
      "correo": "string",
      "clave": "string"
   }
 
-  El json de salida es el siguiente:
+  Lo que obtendrás como respuesta una vez creado el usuario es el siguiente json, 
+  donde se enviara el token para su uso en los endpoints donde sea requerido y el tiempo de expiración:
 
   {
   "success": true,
