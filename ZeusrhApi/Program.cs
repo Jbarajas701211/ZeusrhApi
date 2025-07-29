@@ -27,6 +27,9 @@ builder.Services.AddTransient<IAppDbContext>(sp =>
 builder.Services.AddTransient<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddTransient<IManagementUsuario, ManagementUsuario>();
 builder.Services.AddTransient<IUtility,  Utility>();
+builder.Services.AddTransient<IProductoRepository, ProductoRepository>();
+builder.Services.AddTransient<IManagamentProducto, ManagementProducto>();
+
 
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<AutoMapperProfiles>());
 

@@ -10,5 +10,6 @@ namespace Interfaces.IRepository
     public interface IProductoRepository
     {
         Task<Producto> ObtenerProductoPorId(int idProducto);
+        Task<bool> CrearProductoAsync(Producto producto);
     }
 }
