@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Interfaces.IBussiness;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Models.DTOs;
@@ -8,6 +10,7 @@ using Models.Entities;
 namespace ZeusrhApi.Controllers
 {
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     public class ProductoController : Controller
     {

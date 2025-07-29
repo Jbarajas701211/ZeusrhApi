@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Interfaces.IBussiness;
 using Interfaces.Utilitys;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Models.DTOs;
@@ -9,6 +10,7 @@ using Models.Entities;
 namespace ZeusrhApi.Controllers
 {
     [ApiController]
+    [AllowAnonymous]
     [Route("api/[controller]")]
     public class UsuarioController : Controller
     {

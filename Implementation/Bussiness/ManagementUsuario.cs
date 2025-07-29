@@ -71,7 +71,10 @@ namespace Implementation.Bussiness
                 if (!passwordValido)
                 {
                     var intentosUsuario = await _usuarioRepository.ObtenerIntentosUsuarioAsync(existeUsuario.IdUsuario);
+                    if (intentosUsuario is null)
+                    {
 
+                    }
                 }
 
                 var token = _utility.GenerarJWT(existeUsuario);
