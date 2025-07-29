@@ -11,7 +11,7 @@ Esta es una API desarrollada con ASP.NET Core para gestionar como prueba para au
 
 ## Endpoints principales
 
-# Para Usuario
+### Para Usuario
 
 - GET /api/Usuario/registro
   El json de entrada es el siguiente: 
@@ -56,7 +56,7 @@ Esta es una API desarrollada con ASP.NET Core para gestionar como prueba para au
   ]
 }
 
-# Para Productos
+### Para Productos
 
 - GET /api/Producto
 
